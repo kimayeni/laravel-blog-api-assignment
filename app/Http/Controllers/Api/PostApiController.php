@@ -60,7 +60,7 @@ return PostResource::collection($posts);
     // DELETE /api/posts/{post}
     public function destroy(Post $post)
     {
-        if ($post->user_id !== auth()->id()) {
+        if (auth()->id() !== $post->user_id){
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
