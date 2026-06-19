@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Resources\PostResource;
 
 class PostApiController extends Controller
 {
     // GET /api/posts
     public function index()
     {
-        return response()->json(Post::all());
+        $posts = Post::with('user')->get();
+
+return PostResource::collection($posts);
     }
 
     // POST /api/posts
@@ -28,13 +31,13 @@ class PostApiController extends Controller
             'user_id' => auth()->id() ?? 1, // temporary fallback if auth not set yet
         ]);
 
-        return response()->json($post, 201);
+       return new PostResource($post);
     }
 
     // GET /api/posts/{post}
     public function show(Post $post)
     {
-        return response()->json($post);
+        return new PostResource($post);
     }
 
     // PUT /api/posts/{post}
@@ -51,7 +54,7 @@ class PostApiController extends Controller
 
         $post->update($validated);
 
-        return response()->json($post);
+        return new PostResource($post);
     }
 
     // DELETE /api/posts/{post}
