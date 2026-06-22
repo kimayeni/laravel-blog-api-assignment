@@ -31,7 +31,9 @@ return PostResource::collection($posts);
             'user_id' => auth()->id() ?? 1, // temporary fallback if auth not set yet
         ]);
 
-       return new PostResource($post);
+       return (new PostResource($post))
+    ->response()
+    ->setStatusCode(201);
     }
 
     // GET /api/posts/{post}
